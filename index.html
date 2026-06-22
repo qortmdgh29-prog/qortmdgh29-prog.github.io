@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>체감온도 계산기</title>
+    
+    <!-- CDN을 통해 Pretendard 폰트를 불러옵니다 -->
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; 
+            background-color: #f4f4f9;
+            
+            /* 불러온 Pretendard 폰트를 1순위로 적용합니다 */
+            font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
+            
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .container {
+            background: white;
+            width: 90%;
+            max-width: 400px;
+            padding: 30px 20px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            box-sizing: border-box;
+        }
+
+        h2 {
+            margin-top: 0;
+            text-align: center;
+            font-size: 22px;
+            font-weight: 700; /* 굵게 */
+            letter-spacing: -0.5px; /* 글자 간격을 살짝 좁혀 더 세련되게 */
+        }
+
+        label { 
+            display: block; 
+            margin-top: 15px; 
+            font-weight: 600; 
+            font-size: 14px;
+            color: #333;
+        }
+        
+        input { 
+            width: 100%; 
+            padding: 12px; 
+            margin-top: 8px; 
+            box-sizing: border-box; 
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+            /* 입력칸과 숫자에도 폰트 적용 */
+            font-family: inherit; 
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            margin-top: 25px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        button:active {
+            background-color: #0056b3;
+        }
+
+        .result {
+            font-size: 24px;
+            font-weight: 700;
+            text-align: center;
+            margin-top: 25px;
+            color: #d9534f;
+            letter-spacing: -0.5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>🌡️ 체감온도 계산기</h2>
+    
+    <label for="temp">현재 온도 (°C)</label>
+    <input type="number" id="temp" value="30" step="0.1">
+
+    <label for="humidity">현재 습도 (%)</label>
+    <input type="number" id="humidity" value="60" step="1">
+
+    <button onclick="calculateFeelsLike()">계산하기</button>
+
+    <div class="result" id="resultText"></div>
+</div>
+
+<script>
+    function calculateFeelsLike() {
+        const T = parseFloat(document.getElementById('temp').value);
+        const RH = parseFloat(document.getElementById('humidity').value);
+
+        const c1 = -8.78469475556, c2 = 1.61139411, c3 = 2.33854883889;
+        const c4 = -0.14611605, c5 = -0.012308094, c6 = -0.0164248277778;
+        const c7 = 0.002211732, c8 = 0.00072546, c9 = -0.000003582;
+
+        let feelsLike = c1 + (c2 * T) + (c3 * RH) + (c4 * T * RH) + 
+                        (c5 * T * T) + (c6 * RH * RH) + (c7 * T * T * RH) + 
+                        (c8 * T * RH * RH) + (c9 * T * T * RH * RH);
+
+        if (T < 20) {
+            feelsLike = T;
+        }
+
+        document.getElementById('resultText').innerText = `체감온도: ${feelsLike.toFixed(1)} °C`;
+    }
+</script>
+
+</body>
+</html>
